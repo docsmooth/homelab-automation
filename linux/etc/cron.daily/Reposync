@@ -2,28 +2,40 @@
 
 . /etc/homelab-paths.conf
 
-for vers in "7/os/x86_64/" "7/updates/x86_64/" "8-stream/BaseOS/x86_64/os/" "8-stream/AppStream/x86_64/os/" "8-stream/cr/x86_64/os/"; do
+for vers in "8-stream/BaseOS/x86_64/os/" "8-stream/PowerTools/x86_64/os/" "8-stream/extras/x86_64/os/"; do
 
     mkdir -p ${repobase}/centos${vers}
-    #rsync -artP --exclude '*/drpms/*' --delete rsync://${mirror}/${vers} ${repobase}/centos${vers} 2>&1
-    rsync -aqzH --delay-updates --delete-after --exclude '*/drpms/*' rsync://${mirror}/${vers} ${repobase}/centos${vers} 2>&1
+    #rsync -artP --exclude '*/drpms/*' --delete rsync://${mirror8}/${vers} ${repobase}/centos${vers} 2>&1
+    rsync -aqzH --delay-updates --delete-after --exclude '*/drpms/*' rsync://${mirror8}/${vers} ${repobase}/centos${vers} 2>&1
     if [ $? -ne 0 ]; then
-        echo "ERROR getting os files from ${mirror} for ${vers} x64, quitting."
+        echo "ERROR getting os files from ${mirror8} for ${vers} x64, quitting."
         exit 1
     fi
 done
-mirror="yum-rsync.oracle.com"
 for vers in OL9; do
   #for stream in appstream "baseos/latest" ; do
   # appstream is over 100GB
   for stream in "baseos/latest" ; do
     subpath="${vers}/${stream}/x86_64"
     mkdir -p ${repobase}/${subpath}
-    rsync -artP --exclude '*/drpms/*' --exclude '*/debug/*' --delete rsync://${mirror}/repo/OracleLinux/${subpath} ${repobase}/${subpath} 2>&1
+    rsync -artP --exclude '*/drpms/*' --exclude '*/debug/*' --exclude '*/getPackageSource/*' --delete rsync://${mirror9}/repo/OracleLinux/${subpath} ${repobase}/${subpath} 2>&1
     if [ $? -ne 0 ]; then
-      echo "ERROR getting os files from ${mirror} for ${subpath}, quitting!"
+      echo "ERROR getting os files from ${mirror9} for ${subpath}, quitting!"
       exit 4
     fi
   done
 done
+
+for vers in "10" ; do
+    for stream in "BaseOS" "CRB" "extras"; do
+        subpath="${vers}/${stream}/x86_64_v2"
+        mkdir -p ${repobase}/${subpath}
+        rsync -artP --exclude '*/drpms*' --exclude '*/debug/*' --exclude '*/getPackageSource/*' --delete rsync://${mirror10}/${subpath} ${repobase}/${subpath} 2>&1
+        if [ $? -ne 0 ]; then
+            echo "ERROR getting os files from ${mirror10} for ${subpath}, quitting!"
+            exit 4
+        fi
+    done
+done
 chown -R apache:apache ${repobase}
+restorecon -r ${repobase}
