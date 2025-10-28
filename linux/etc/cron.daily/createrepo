@@ -1,0 +1,9 @@
+#!/bin/sh
+
+. /etc/homelab-paths.conf
+repopath="/home/share/repo/"
+
+createrepo --checksum sha ${repopath}/yum/pbise/x86_64 >/dev/null
+createrepo --checksum sha ${repopath}/yum/pbiso/x86_64 >/dev/null
+chown -R $apacheuser:$apachegroup ${repopath}/yum/pbise >/dev/null
+chown -R $apacheuser:$apachegroup ${repopath}/yum/pbiso >/dev/null
