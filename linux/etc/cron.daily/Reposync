@@ -6,7 +6,7 @@ for vers in "8-stream/BaseOS/x86_64/os/" "8-stream/PowerTools/x86_64/os/" "8-str
 
     mkdir -p ${repobase}/centos${vers}
     #rsync -artP --exclude '*/drpms/*' --delete rsync://${mirror8}/${vers} ${repobase}/centos${vers} 2>&1
-    rsync -aqzH --delay-updates --delete-after --exclude '*/drpms/*' rsync://${mirror8}/${vers} ${repobase}/centos${vers} 2>&1
+    rsync -aqzH --delete-during --exclude '*/drpms/*' rsync://${mirror8}/${vers} ${repobase}/centos${vers} 2>&1
     if [ $? -ne 0 ]; then
         echo "ERROR getting os files from ${mirror8} for ${vers} x64, quitting."
         exit 1
@@ -17,7 +17,7 @@ for vers in OL9; do
   for stream in appstream "baseos/latest" ; do
     subpath="${vers}/${stream}/x86_64"
     mkdir -p ${repobase}/${subpath}
-    rsync -aqzH --delay-updates --delete-after --exclude '*/drpms/*' --exclude '*/debug/*' --exclude '*/getPackageSource/*' rsync://${mirror9}/repo/OracleLinux/${subpath}/ ${repobase}/${subpath} 2>&1
+    rsync -aqzH --delete-during --exclude '*/drpms/*' --exclude '*/debug/*' --exclude '*/getPackageSource/*' rsync://${mirror9}/repo/OracleLinux/${subpath}/ ${repobase}/${subpath} 2>&1
     if [ $? -ne 0 ]; then
       echo "ERROR getting os files from ${mirror9} for ${subpath}, quitting!"
       exit 4
@@ -29,7 +29,7 @@ for vers in "10" ; do
     for stream in "BaseOS" "CRB" "extras" "AppStream"; do
         subpath="${vers}/${stream}/x86_64_v2"
         mkdir -p ${repobase}/${subpath}
-        rsync -aqzH --delay-updates --delete-after --exclude '*/drpms*' --exclude '*/debug/*' --exclude '*/getPackageSource/*' rsync://${mirror10}/${subpath}/ ${repobase}/${subpath} 2>&1
+        rsync -aqzH --delete-during --exclude '*/drpms*' --exclude '*/debug/*' --exclude '*/getPackageSource/*' rsync://${mirror10}/${subpath}/ ${repobase}/${subpath} 2>&1
         if [ $? -ne 0 ]; then
             echo "ERROR getting os files from ${mirror10} for ${subpath}, quitting!"
             exit 4
