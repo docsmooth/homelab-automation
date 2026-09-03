@@ -2,8 +2,7 @@
 
 . /etc/homelab-paths.conf
 
-createrepo --checksum sha256 ${repopath}/yum/pbise/x86_64 >/dev/null
-createrepo --checksum sha256 ${repopath}/yum/pbiso/x86_64 >/dev/null
+createrepo --checksum sha ${repopath}/yum/pbise/x86_64 >/dev/null
+createrepo --checksum sha ${repopath}/yum/pbiso/x86_64 >/dev/null
 chown -R $apacheuser:$apachegroup ${repopath}/yum/pbise >/dev/null
 chown -R $apacheuser:$apachegroup ${repopath}/yum/pbiso >/dev/null
-chcon -R -t httpd_sys_content_t ${repopath}
